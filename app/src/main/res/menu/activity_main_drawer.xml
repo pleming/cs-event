@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cu"
+            android:icon="@drawable/cu_logo"
+            android:title="CU" />
+        <item
+            android:id="@+id/nav_gs25"
+            android:icon="@drawable/gs25_logo"
+            android:title="GS25" />
+        <item
+            android:id="@+id/nav_7_eleven"
+            android:icon="@drawable/seveneleven_logo"
+            android:title="7-ELEVEN" />
+    </group>
+
+</menu>
