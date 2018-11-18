@@ -5,4 +5,8 @@
     <string name="nav_header_title">CS Event</string>
     <string name="nav_header_subtitle">Collection of Convenience Store Event Production</string>
     <string name="nav_header_desc">Navigation header</string>
+
+    <string name="tab_text_1">1+1</string>
+    <string name="tab_text_2">2+1</string>
+    <string name="tab_text_3">3+1</string>
 </resources>
