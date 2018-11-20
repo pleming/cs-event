@@ -12,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.event.cs.csevent.callback.ProductLoadCallback;
 import com.event.cs.csevent.model.ProductItem;
 import com.event.cs.csevent.service.ProductService;
 import com.event.cs.csevent.tab.SectionsPagerAdapter;
+import com.event.cs.csevent.util.AjaxManager;
 
 import java.util.ArrayList;
 
@@ -22,11 +24,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private AjaxManager ajaxManager;
 
     private ProductService productService;
     private Integer csType = 1;
 
-    private void changeEventType(int tabPosition) {
+    private void changeEventType(final int tabPosition) {
         ArrayList<ProductItem> productInfo = null;
 
         if (tabPosition == 0) {
@@ -38,16 +41,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         productInfo.clear();
-        productService.loadProduct(csType, tabPosition + 1, productInfo);
 
-        mSectionsPagerAdapter.notifyDataSetChanged();
-        mViewPager.setCurrentItem(tabPosition);
+        productService.loadProduct(csType, tabPosition + 1, productInfo, new ProductLoadCallback() {
+            @Override
+            public void callback() {
+                mSectionsPagerAdapter.notifyDataSetChanged();
+                mViewPager.setCurrentItem(tabPosition);
+            }
+        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ajaxManager.init(getApplicationContext());
 
         /* Toolbar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -89,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         /* Initialization */
-        productService = new ProductService();
+        productService = new ProductService(getApplication());
         csType = 1;
         changeEventType(0);
     }

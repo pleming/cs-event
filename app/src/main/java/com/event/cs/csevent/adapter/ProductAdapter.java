@@ -44,7 +44,7 @@ public class ProductAdapter extends BaseAdapter {
         ProductItem item = items.get(position);
 
         view.setCsName(item.getCsName());
-        view.setProductImage(new byte[16]);
+        view.setProductImage(item.getProductImage());
         view.setProductName(item.getProductName());
         view.setEventType(item.getEventType());
         view.setPrice(item.getPrice());

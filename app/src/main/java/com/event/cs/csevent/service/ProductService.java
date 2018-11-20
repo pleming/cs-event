@@ -1,37 +1,75 @@
 package com.event.cs.csevent.service;
 
-import com.event.cs.csevent.adapter.ProductAdapter;
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
+import com.event.cs.csevent.callback.ProductLoadCallback;
 import com.event.cs.csevent.model.ProductItem;
+import com.event.cs.csevent.util.AjaxManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ProductService {
-    private ProductAdapter productAdapter;
+    private Context context;
 
-    public void loadProduct(int csType, int eventType, ArrayList<ProductItem> productInfo) {
-        // Load product information from DB.
-        String csName = null;
-        String eventTypeName = null;
+    public ProductService(Context context) {
+        this.context = context;
+    }
 
-        // Test
-        if (csType == 1) {
-            csName = "CU";
-        } else if (csType == 2) {
-            csName = "GS25";
-        } else if (csType == 3) {
-            csName = "7-ELEVEN";
-        }
+    public void loadProduct(int csType, int eventType, final ArrayList<ProductItem> productInfo, final ProductLoadCallback callback) {
+        HashMap<String, Object> param = new HashMap<String, Object>();
 
-        if (eventType == 1) {
-            eventTypeName = "1+1";
-        } else if (eventType == 2) {
-            eventTypeName = "2+1";
-        } else if (eventType == 3) {
-            eventTypeName = "3+1";
-        }
+        param.put("csType", csType);
+        param.put("eventType", eventType);
+        param.put("startIdx", 0);
+        param.put("count", 3);
 
-        productInfo.add(new ProductItem(csName, new byte[16], "롯데)게토레이레몬캔240ml", eventTypeName, "12,345원"));
-        productInfo.add(new ProductItem(csName, new byte[16], "케라시스)미니세트", eventTypeName, "45,678원"));
-        productInfo.add(new ProductItem(csName, new byte[16], "해피바스로즈바디워시", eventTypeName, "98,765원"));
+        AjaxManager.ajax("/loadProductInfo", param, new AjaxCallback<JSONObject>() {
+            @Override
+            public void callback(String url, JSONObject json, AjaxStatus status) {
+                if (json == null) {
+                    Toast.makeText(context, "상품 목록 불러오기를 실패하였습니다. 관리자에게 문의해주세요.", Toast.LENGTH_LONG).show();
+                    Log.d("AJAX", "ProductService.loadProduct() Error.(" + status.getCode() + ")");
+                    return;
+                }
+
+                try {
+                    JSONArray res = json.getJSONArray("contents");
+
+                    for (int i = 0; i < res.length(); i++) {
+                        JSONObject productJson = (JSONObject) res.get(i);
+                        ProductItem productItem = new ProductItem();
+
+                        productItem.setCsName(productJson.getString("csName"));
+                        productItem.setEventType(productJson.getString("eventName"));
+                        productItem.setProductName(productJson.getString("productName"));
+                        productItem.setPrice(String.valueOf(productJson.getInt("price")));
+
+                        JSONArray imageJson = productJson.getJSONObject("image").getJSONArray("data");
+
+                        byte[] imageBytes = new byte[imageJson.length()];
+
+                        for (int j = 0; j < imageJson.length(); j++)
+                            imageBytes[j] = (byte) (((int) imageJson.get(j)) & 0xFF);
+
+                        productItem.setProductImage(imageBytes);
+
+                        productInfo.add(productItem);
+                    }
+
+                    callback.callback();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

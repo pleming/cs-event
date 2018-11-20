@@ -7,6 +7,9 @@ public class ProductItem {
     private String eventType;
     private String price;
 
+    public ProductItem() {
+    }
+
     public ProductItem(String csName, byte[] productImage, String productName, String eventType, String price) {
         this.csName = csName;
         this.productImage = productImage;
