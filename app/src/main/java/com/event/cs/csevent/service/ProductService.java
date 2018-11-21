@@ -24,11 +24,12 @@ public class ProductService {
         this.context = context;
     }
 
-    public void loadProduct(int csType, int eventType, final ArrayList<ProductItem> productInfo, final ProductLoadCallback callback) {
+    public void loadProduct(int csType, int eventType, String searchTxt, final ArrayList<ProductItem> productInfo, final ProductLoadCallback callback) {
         HashMap<String, Object> param = new HashMap<String, Object>();
 
         param.put("csType", csType);
         param.put("eventType", eventType);
+        param.put("searchTxt", searchTxt);
         param.put("startIdx", 0);
         param.put("count", 3);
 

@@ -9,7 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.event.cs.csevent.callback.ProductLoadCallback;
@@ -24,10 +26,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TabLayout tabLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private AjaxManager ajaxManager;
 
     private ProductService productService;
     private Integer csType = 1;
+    private String searchTxt = null;
 
     private void changeEventType(final int tabPosition) {
         ArrayList<ProductItem> productInfo = null;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         productInfo.clear();
 
-        productService.loadProduct(csType, tabPosition + 1, productInfo, new ProductLoadCallback() {
+        productService.loadProduct(csType, tabPosition + 1, searchTxt, productInfo, new ProductLoadCallback() {
             @Override
             public void callback() {
                 mSectionsPagerAdapter.notifyDataSetChanged();
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ajaxManager.init(getApplicationContext());
+        AjaxManager.init(getApplicationContext());
 
         /* Toolbar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -109,17 +111,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_cu) {
             csType = 1;
-            changeEventType(0);
         } else if (id == R.id.nav_gs25) {
             csType = 2;
-            changeEventType(0);
         } else if (id == R.id.nav_7_eleven) {
             csType = 3;
-            changeEventType(0);
         }
+
+        searchTxt = null;
+        changeEventType(0);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchTxt = query;
+                changeEventType(0);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                searchTxt = null;
+                changeEventType(0);
+                return false;
+            }
+        });
 
         return true;
     }
