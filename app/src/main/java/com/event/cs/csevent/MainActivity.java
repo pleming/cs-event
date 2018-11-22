@@ -80,24 +80,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* View Pager */
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                changeEventType(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageSelected(int position) {
+                changeEventType(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
+
+        tabLayout.setupWithViewPager(mViewPager);
 
         /* Initialization */
         productService = new ProductService(getApplication());
