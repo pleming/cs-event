@@ -7,23 +7,35 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.event.cs.csevent.service.ProductService;
+
 public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     private OneToOneFragment oneToOneFragment;
     private TwoToOneFragment twoToOneFragment;
     private ThreeToOneFragment threeToOneFragment;
     private int tabCount;
+    private ProductService productService;
 
-    public SectionsPagerAdapter(FragmentManager fm, int tabCount, Context context) {
+    public SectionsPagerAdapter(FragmentManager fm, int tabCount, Context context, ProductService productService) {
         super(fm);
 
         this.oneToOneFragment = new OneToOneFragment();
         this.twoToOneFragment = new TwoToOneFragment();
         this.threeToOneFragment = new ThreeToOneFragment();
         this.tabCount = tabCount;
+        this.productService = productService;
 
         this.oneToOneFragment.setContext(context);
         this.twoToOneFragment.setContext(context);
         this.threeToOneFragment.setContext(context);
+
+        this.oneToOneFragment.setProductService(productService);
+        this.twoToOneFragment.setProductService(productService);
+        this.threeToOneFragment.setProductService(productService);
+
+        this.oneToOneFragment.setmSectionsPagerAdapter(this);
+        this.twoToOneFragment.setmSectionsPagerAdapter(this);
+        this.threeToOneFragment.setmSectionsPagerAdapter(this);
     }
 
     public OneToOneFragment getOneToOneFragment() {

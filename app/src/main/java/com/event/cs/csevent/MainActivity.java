@@ -32,21 +32,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String searchTxt = null;
 
     private void changeEventType(final int tabPosition) {
-        ArrayList<ProductItem> productInfo = null;
-
-        if (tabPosition == 0) {
-            productInfo = mSectionsPagerAdapter.getOneToOneFragment().getProductInfo();
-        } else if (tabPosition == 1) {
-            productInfo = mSectionsPagerAdapter.getTwoToOneFragment().getProductInfo();
-        } else if (tabPosition == 2) {
-            productInfo = mSectionsPagerAdapter.getThreeToOneFragment().getProductInfo();
-        }
-
-        productInfo.clear();
-
-        productService.loadProduct(csType, tabPosition + 1, searchTxt, productInfo, new ProductLoadCallback() {
+        productService.loadProduct(csType, tabPosition + 1, searchTxt, 0, 10, new ProductLoadCallback() {
             @Override
-            public void callback() {
+            public void callback(ArrayList<ProductItem> _productInfo) {
+                ArrayList<ProductItem> productInfo = null;
+
+                if (tabPosition == 0) {
+                    productInfo = mSectionsPagerAdapter.getOneToOneFragment().getProductInfo();
+                } else if (tabPosition == 1) {
+                    productInfo = mSectionsPagerAdapter.getTwoToOneFragment().getProductInfo();
+                } else if (tabPosition == 2) {
+                    productInfo = mSectionsPagerAdapter.getThreeToOneFragment().getProductInfo();
+                }
+
+                productInfo.clear();
+
+                for (int i = 0; i < _productInfo.size(); i++)
+                    productInfo.add(_productInfo.get(i));
+
                 mSectionsPagerAdapter.notifyDataSetChanged();
                 mViewPager.setCurrentItem(tabPosition);
             }
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         AjaxManager.init(getApplicationContext());
+        productService = new ProductService(getApplication());
 
         /* Toolbar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* Tab Layout */
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), getApplicationContext());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), getApplicationContext(), productService);
 
         /* View Pager */
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -83,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -93,15 +96,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
         tabLayout.setupWithViewPager(mViewPager);
 
         /* Initialization */
-        productService = new ProductService(getApplication());
         csType = 1;
+        productService.setCsType(csType);
         changeEventType(0);
     }
 
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         searchTxt = null;
+        productService.setCsType(csType);
         changeEventType(0);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -137,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchTxt = query;
+                productService.setSearchTxt(searchTxt);
                 changeEventType(0);
                 searchView.clearFocus();
                 return true;
@@ -152,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onClose() {
                 searchTxt = null;
+                productService.setSearchTxt(searchTxt);
                 changeEventType(0);
                 return false;
             }

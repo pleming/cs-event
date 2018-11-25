@@ -19,19 +19,21 @@ import java.util.HashMap;
 
 public class ProductService {
     private Context context;
+    private int csType;
+    private String searchTxt;
 
     public ProductService(Context context) {
         this.context = context;
     }
 
-    public void loadProduct(int csType, int eventType, String searchTxt, final ArrayList<ProductItem> productInfo, final ProductLoadCallback callback) {
+    public void loadProduct(int csType, int eventType, String searchTxt, int startIdx, int count, final ProductLoadCallback callback) {
         HashMap<String, Object> param = new HashMap<String, Object>();
 
         param.put("csType", csType);
         param.put("eventType", eventType);
         param.put("searchTxt", searchTxt);
-        param.put("startIdx", 0);
-        param.put("count", 3);
+        param.put("startIdx", startIdx);
+        param.put("count", count);
 
         AjaxManager.ajax("/loadProductInfo", param, new AjaxCallback<JSONObject>() {
             @Override
@@ -44,6 +46,8 @@ public class ProductService {
 
                 try {
                     JSONArray res = json.getJSONArray("contents");
+
+                    ArrayList<ProductItem> productInfo = new ArrayList<ProductItem>();
 
                     for (int i = 0; i < res.length(); i++) {
                         JSONObject productJson = (JSONObject) res.get(i);
@@ -66,11 +70,27 @@ public class ProductService {
                         productInfo.add(productItem);
                     }
 
-                    callback.callback();
+                    callback.callback(productInfo);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    public int getCsType() {
+        return csType;
+    }
+
+    public void setCsType(int csType) {
+        this.csType = csType;
+    }
+
+    public String getSearchTxt() {
+        return searchTxt;
+    }
+
+    public void setSearchTxt(String searchTxt) {
+        this.searchTxt = searchTxt;
     }
 }
