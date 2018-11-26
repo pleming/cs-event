@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.event.cs.csevent.callback.ProductLoadCallback;
 import com.event.cs.csevent.model.ProductItem;
+import com.event.cs.csevent.service.CustomProgressBar;
 import com.event.cs.csevent.service.ProductService;
 import com.event.cs.csevent.tab.SectionsPagerAdapter;
 import com.event.cs.csevent.util.AjaxManager;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String searchTxt = null;
 
     private void changeEventType(final int tabPosition) {
+        mViewPager.setCurrentItem(tabPosition);
+        CustomProgressBar.getInstance().progressON(this, "Loading...");
+
         productService.loadProduct(csType, tabPosition + 1, searchTxt, 0, 10, new ProductLoadCallback() {
             @Override
             public void callback(ArrayList<ProductItem> _productInfo) {
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     productInfo.add(_productInfo.get(i));
 
                 mSectionsPagerAdapter.notifyDataSetChanged();
-                mViewPager.setCurrentItem(tabPosition);
+                CustomProgressBar.getInstance().progressOFF();
             }
         });
     }
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         /* Tab Layout */
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), getApplicationContext(), productService);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), getApplicationContext(), productService, this);
 
         /* View Pager */
         mViewPager = (ViewPager) findViewById(R.id.container);

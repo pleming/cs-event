@@ -1,5 +1,6 @@
 package com.event.cs.csevent.tab;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.event.cs.csevent.R;
 import com.event.cs.csevent.adapter.ProductAdapter;
 import com.event.cs.csevent.callback.ProductLoadCallback;
 import com.event.cs.csevent.model.ProductItem;
+import com.event.cs.csevent.service.CustomProgressBar;
 import com.event.cs.csevent.service.ProductService;
 import com.event.cs.csevent.util.AjaxManager;
 
@@ -33,6 +35,7 @@ public class TwoToOneFragment extends Fragment {
     private ProductService productService;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ArrayList<ProductItem> productInfo = new ArrayList<ProductItem>();
+    private Activity mainActivity;
     private boolean lastItemVisibleFlag = false;
     private static int totalItemCount = 0;
 
@@ -54,6 +57,8 @@ public class TwoToOneFragment extends Fragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastItemVisibleFlag) {
+                    CustomProgressBar.getInstance().progressON(mainActivity, "Loading...");
+
                     HashMap<String, Object> param = new HashMap<String, Object>();
 
                     param.put("csType", productService.getCsType());
@@ -83,6 +88,7 @@ public class TwoToOneFragment extends Fragment {
                                             productInfo.add(_productInfo.get(i));
 
                                         mSectionsPagerAdapter.notifyDataSetChanged();
+                                        CustomProgressBar.getInstance().progressOFF();
                                     }
                                 });
                             } catch (JSONException e) {
@@ -115,6 +121,10 @@ public class TwoToOneFragment extends Fragment {
 
     public void setmSectionsPagerAdapter(SectionsPagerAdapter mSectionsPagerAdapter) {
         this.mSectionsPagerAdapter = mSectionsPagerAdapter;
+    }
+
+    public void setMainActivity(Activity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
     public ArrayList<ProductItem> getProductInfo() {

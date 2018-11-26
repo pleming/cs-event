@@ -44,8 +44,12 @@ public class ProductItemView extends LinearLayout {
     }
 
     public void setProductImage(byte[] productImage) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(productImage, 0, productImage.length);
-        imgProduct.setImageBitmap(bitmap);
+        if (productImage == null)
+            imgProduct.setImageResource(R.drawable.no_image);
+        else {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(productImage, 0, productImage.length);
+            imgProduct.setImageBitmap(bitmap);
+        }
     }
 
     public void setProductName(String productName) {

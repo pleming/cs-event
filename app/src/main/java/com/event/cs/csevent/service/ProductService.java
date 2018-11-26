@@ -58,14 +58,19 @@ public class ProductService {
                         productItem.setProductName(productJson.getString("productName"));
                         productItem.setPrice(String.valueOf(productJson.getInt("price")));
 
-                        JSONArray imageJson = productJson.getJSONObject("image").getJSONArray("data");
+                        Object imageJson = productJson.get("image");
 
-                        byte[] imageBytes = new byte[imageJson.length()];
+                        if (imageJson.toString().equals("null"))
+                            productItem.setProductImage(null);
+                        else {
+                            JSONArray imageJsonArr = productJson.getJSONObject("image").getJSONArray("data");
+                            byte[] imageBytes = new byte[imageJsonArr.length()];
 
-                        for (int j = 0; j < imageJson.length(); j++)
-                            imageBytes[j] = (byte) (((int) imageJson.get(j)) & 0xFF);
+                            for (int j = 0; j < imageJsonArr.length(); j++)
+                                imageBytes[j] = (byte) (((int) imageJsonArr.get(j)) & 0xFF);
 
-                        productItem.setProductImage(imageBytes);
+                            productItem.setProductImage(imageBytes);
+                        }
 
                         productInfo.add(productItem);
                     }

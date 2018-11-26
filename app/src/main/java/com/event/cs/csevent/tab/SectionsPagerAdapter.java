@@ -1,5 +1,6 @@
 package com.event.cs.csevent.tab;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,7 +17,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     private int tabCount;
     private ProductService productService;
 
-    public SectionsPagerAdapter(FragmentManager fm, int tabCount, Context context, ProductService productService) {
+    public SectionsPagerAdapter(FragmentManager fm, int tabCount, Context context, ProductService productService, Activity _mainActivity) {
         super(fm);
 
         this.oneToOneFragment = new OneToOneFragment();
@@ -36,6 +37,10 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         this.oneToOneFragment.setmSectionsPagerAdapter(this);
         this.twoToOneFragment.setmSectionsPagerAdapter(this);
         this.threeToOneFragment.setmSectionsPagerAdapter(this);
+
+        this.oneToOneFragment.setMainActivity(_mainActivity);
+        this.twoToOneFragment.setMainActivity(_mainActivity);
+        this.threeToOneFragment.setMainActivity(_mainActivity);
     }
 
     public OneToOneFragment getOneToOneFragment() {
