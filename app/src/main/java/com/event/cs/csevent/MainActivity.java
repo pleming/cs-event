@@ -13,11 +13,13 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 
 import com.event.cs.csevent.callback.ProductLoadCallback;
 import com.event.cs.csevent.model.ProductItem;
 import com.event.cs.csevent.service.CustomProgressBar;
 import com.event.cs.csevent.service.ProductService;
+import com.event.cs.csevent.tab.ICsFragment;
 import com.event.cs.csevent.tab.SectionsPagerAdapter;
 import com.event.cs.csevent.util.AjaxManager;
 
@@ -39,22 +41,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         productService.loadProduct(csType, tabPosition + 1, searchTxt, 0, 10, new ProductLoadCallback() {
             @Override
             public void callback(ArrayList<ProductItem> _productInfo) {
+                ICsFragment fragment = null;
                 ArrayList<ProductItem> productInfo = null;
+                GridView gridProduct = null;
 
                 if (tabPosition == 0) {
-                    productInfo = mSectionsPagerAdapter.getOneToOneFragment().getProductInfo();
+                    fragment = mSectionsPagerAdapter.getOneToOneFragment();
                 } else if (tabPosition == 1) {
-                    productInfo = mSectionsPagerAdapter.getTwoToOneFragment().getProductInfo();
+                    fragment = mSectionsPagerAdapter.getTwoToOneFragment();
                 } else if (tabPosition == 2) {
-                    productInfo = mSectionsPagerAdapter.getThreeToOneFragment().getProductInfo();
+                    fragment = mSectionsPagerAdapter.getThreeToOneFragment();
                 }
 
+                productInfo = fragment.getProductInfo();
                 productInfo.clear();
 
                 for (int i = 0; i < _productInfo.size(); i++)
                     productInfo.add(_productInfo.get(i));
 
                 mSectionsPagerAdapter.notifyDataSetChanged();
+
+                gridProduct = fragment.getGridProduct();
+                gridProduct.smoothScrollToPosition(0);
+
                 CustomProgressBar.getInstance().progressOFF();
             }
         });

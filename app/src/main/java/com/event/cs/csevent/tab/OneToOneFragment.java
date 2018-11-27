@@ -30,8 +30,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class OneToOneFragment extends Fragment {
+public class OneToOneFragment extends Fragment implements ICsFragment {
     private Context context;
+    private GridView gridProduct;
     private ProductService productService;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ArrayList<ProductItem> productInfo = new ArrayList<ProductItem>();
@@ -44,7 +45,7 @@ public class OneToOneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_one_to_one, container, false);
 
-        GridView gridProduct = (GridView) linearLayout.findViewById(R.id.gridProduct);
+        gridProduct = (GridView) linearLayout.findViewById(R.id.gridProduct);
 
         ProductAdapter productAdapter = new ProductAdapter(context);
 
@@ -111,23 +112,33 @@ public class OneToOneFragment extends Fragment {
         return linearLayout;
     }
 
+    @Override
     public void setContext(Context context) {
         this.context = context;
     }
 
+    @Override
     public void setProductService(ProductService productService) {
         this.productService = productService;
     }
 
+    @Override
     public void setmSectionsPagerAdapter(SectionsPagerAdapter mSectionsPagerAdapter) {
         this.mSectionsPagerAdapter = mSectionsPagerAdapter;
     }
 
+    @Override
     public void setMainActivity(Activity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
+    @Override
     public ArrayList<ProductItem> getProductInfo() {
         return this.productInfo;
+    }
+
+    @Override
+    public GridView getGridProduct() {
+        return this.gridProduct;
     }
 }
