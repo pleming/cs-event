@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.event.cs.csevent.R;
 
+import java.text.NumberFormat;
+
 public class ProductItemView extends LinearLayout {
     private TextView txtCSName;
     private ImageView imgProduct;
@@ -61,6 +63,6 @@ public class ProductItemView extends LinearLayout {
     }
 
     public void setPrice(String price) {
-        this.txtPrice.setText(price);
+        this.txtPrice.setText(NumberFormat.getInstance().format(Integer.parseInt(price)) + "원");
     }
 }
