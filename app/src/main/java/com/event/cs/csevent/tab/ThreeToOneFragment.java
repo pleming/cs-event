@@ -79,8 +79,10 @@ public class ThreeToOneFragment extends Fragment implements ICsFragment {
                                 JSONObject res = json.getJSONObject("contents");
                                 int count = res.getInt("count");
 
-                                if (totalItemCount == count)
+                                if (totalItemCount == count) {
+                                    CustomProgressBar.getInstance().progressOFF();
                                     return;
+                                }
 
                                 productService.loadProduct(productService.getCsType(), 3, productService.getSearchTxt(), totalItemCount, 10, new ProductLoadCallback() {
                                     @Override
