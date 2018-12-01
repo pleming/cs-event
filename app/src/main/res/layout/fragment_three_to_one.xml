@@ -9,7 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:horizontalSpacing="8dp"
-        android:verticalSpacing="8dp"
-        android:numColumns="2" />
+        android:numColumns="2"
+        android:verticalSpacing="8dp" />
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="검색 결과가 존재하지 않습니다."
+        android:visibility="gone" />
 
 </LinearLayout>

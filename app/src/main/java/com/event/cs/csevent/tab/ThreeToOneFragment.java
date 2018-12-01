@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.callback.AjaxCallback;
@@ -46,6 +47,7 @@ public class ThreeToOneFragment extends Fragment implements ICsFragment {
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_three_to_one, container, false);
 
         gridProduct = (GridView) linearLayout.findViewById(R.id.gridProduct);
+        gridProduct.setEmptyView((TextView) linearLayout.findViewById(R.id.txtEmpty));
 
         ProductAdapter productAdapter = new ProductAdapter(context);
 
