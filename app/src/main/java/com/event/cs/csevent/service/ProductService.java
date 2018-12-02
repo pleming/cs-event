@@ -41,6 +41,7 @@ public class ProductService {
                 if (json == null) {
                     Toast.makeText(context, "상품 목록 불러오기를 실패하였습니다. 관리자에게 문의해주세요.", Toast.LENGTH_LONG).show();
                     Log.d("AJAX", "ProductService.loadProduct() Error.(" + status.getCode() + ")");
+                    callback.callback(new ArrayList<ProductItem>());
                     return;
                 }
 

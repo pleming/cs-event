@@ -74,6 +74,7 @@ public class OneToOneFragment extends Fragment implements ICsFragment {
                             if (json == null) {
                                 Toast.makeText(context, "상품 목록 개수 불러오기를 실패하였습니다. 관리자에게 문의해주세요.", Toast.LENGTH_LONG).show();
                                 Log.d("AJAX", "Fragment.loadCountProductInfo() Error.(" + status.getCode() + ")");
+                                CustomProgressBar.getInstance().progressOFF();
                                 return;
                             }
 
