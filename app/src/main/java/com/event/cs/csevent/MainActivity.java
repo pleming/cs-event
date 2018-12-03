@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /* Navigation Drawer */
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
         /* Tab Layout */
         tabLayout = (TabLayout) findViewById(R.id.tabs);
